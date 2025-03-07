@@ -16,6 +16,9 @@ const countDisplay = document.getElementById('count');
 const incrementButton = document.getElementById('increment-btn');
 const shopButton = document.querySelector('.rectangle');
 const dropdown = document.querySelector('.dropdown');
+const dropdown2 = document.querySelector('.dropdown2');
+const perClickButton = document.getElementById('perClickButton');
+const perSecondButton = document.getElementById('perSecondButton')
 const specialButton = document.getElementById('special-btn');
 const specialButton2 = document.querySelector('.dropdown button:nth-child(2)');
 const specialButton3 = document.getElementById('special-btn-3');
@@ -32,6 +35,11 @@ const incrementDisplay2 = specialButton2.querySelector('.info span:first-child')
 const purchaseCountDisplay3 = specialButton3.querySelector('.purchase-count')
 const costDisplay3 = specialButton3.querySelector('.cost');
 const incrementDisplay3 = specialButton3.querySelector('.info span:first-child');
+
+const perClickDisplay = perClickButton.querySelector('.cost');
+const perClickTitle = perClickButton.querySelector('.info span:first-child')
+const perSecondDisplay = perSecondButton.querySelector('.cost');
+const perSecondTitle = perSecondButton.querySelector('.info span:first-child')
 
 setInterval(() => {
     if (perSecond > 0) {
@@ -88,7 +96,7 @@ function calculateIncrementBonus2() {
 function calculateIncrementBonus3() {
     // Start at 5, increase by 2 every 5 purchases
     if (purchaseCount3 === 0) return 1;
-    return 5 + (Math.floor((purchaseCount3 - 1) / 5) * 2);
+    return 1 + (Math.floor((purchaseCount3 - 1) / 5) * 2);
 }
 
 function getNextIncrementBonus() {
@@ -118,6 +126,11 @@ function updateButtonText() {
     const bonus3 = getNextIncrementBonus3();
     costDisplay3.textContent = `Cost: ${cost3}`;
     incrementDisplay3.textContent = `+${bonus3} per second`;
+
+    perClickDisplay.textContent = `${incrementAmount}`;
+    perClickTitle.textContent = 'Amount per click: ';
+    perSecondDisplay.textContent = `${perSecond}`;
+    perSecondTitle.textContent = 'Amount per second: ';
 }
 
 function showNotification(message) {
@@ -229,10 +242,7 @@ specialButton3.addEventListener('click', () => {
 });
 
 testButton.addEventListener('click', () => {
-    counter += 10000;
-    countDisplay.textContent = counter;
-    updateSpecialButtonState();
-    showNotification('Added 100 points!');
+    dropdown2.classList.toggle('show');
 });
 
 // Initial state
