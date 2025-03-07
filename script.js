@@ -72,6 +72,11 @@ function loadGameState() {
 
         // Update the UI with the loaded state
         countDisplay.textContent = counter;
+
+        purchaseCountDisplay.textContent = purchaseCount;
+        purchaseCountDisplay2.textContent = purchaseCount2;
+        purchaseCountDisplay3.textContent = purchaseCount3;
+
         updateButtonText();
         updateSpecialButtonState();
     }
@@ -79,13 +84,6 @@ function loadGameState() {
 
 // Call loadGameState when the page loads
 window.addEventListener('load', loadGameState);
-
-setInterval(() => {
-    if (perSecond > 0) {
-        counter += perSecond;
-        countDisplay.textContent = counter;
-    }
-}, 1000);
 
 function calculateCost() {
     return currentCost;
@@ -276,6 +274,7 @@ specialButton3.addEventListener('click', () => {
                 counter += perSecond;
                 countDisplay.textContent = counter;
                 updateSpecialButtonState();
+                saveGameState();
             }, 1000);  // Update every second
         }
 
@@ -283,6 +282,15 @@ specialButton3.addEventListener('click', () => {
         saveGameState();
     }
 });
+
+setInterval(() => {
+    if (perSecond > 0) {
+        counter += perSecond;
+        countDisplay.textContent = counter;
+        updateSpecialButtonState();
+        saveGameState();
+    }
+}, 1000);
 
 testButton.addEventListener('click', () => {
     dropdown2.classList.toggle('show');
