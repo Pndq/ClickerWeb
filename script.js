@@ -41,6 +41,45 @@ const perClickTitle = perClickButton.querySelector('.info span:first-child')
 const perSecondDisplay = perSecondButton.querySelector('.cost');
 const perSecondTitle = perSecondButton.querySelector('.info span:first-child')
 
+function saveGameState() {
+    const gameState = {
+        counter,
+        incrementAmount,
+        perSecond,
+        purchaseCount,
+        purchaseCount2,
+        purchaseCount3,
+        currentCost,
+        currentCost2,
+        currentCost3,
+    };
+    localStorage.setItem('pndqClickerGameState', JSON.stringify(gameState));
+}
+
+function loadGameState() {
+    const savedState = localStorage.getItem('pndqClickerGameState');
+    if (savedState) {
+        const gameState = JSON.parse(savedState);
+        counter = gameState.counter || 0;
+        incrementAmount = gameState.incrementAmount || 1;
+        perSecond = gameState.perSecond || 0;
+        purchaseCount = gameState.purchaseCount || 0;
+        purchaseCount2 = gameState.purchaseCount2 || 0;
+        purchaseCount3 = gameState.purchaseCount3 || 0;
+        currentCost = gameState.currentCost || 25;
+        currentCost2 = gameState.currentCost2 || 125;
+        currentCost3 = gameState.currentCost3 || 200;
+
+        // Update the UI with the loaded state
+        countDisplay.textContent = counter;
+        updateButtonText();
+        updateSpecialButtonState();
+    }
+}
+
+// Call loadGameState when the page loads
+window.addEventListener('load', loadGameState);
+
 setInterval(() => {
     if (perSecond > 0) {
         counter += perSecond;
@@ -177,6 +216,7 @@ incrementButton.addEventListener('click', () => {
     counter += incrementAmount;
     countDisplay.textContent = counter;
     updateSpecialButtonState();
+    saveGameState();
 });
 
 shopButton.addEventListener('click', () => {
@@ -195,6 +235,7 @@ specialButton.addEventListener('click', () => {
         purchaseCountDisplay.textContent = purchaseCount;
         showNotification(`Purchased! Now clicking gives +${incrementAmount}!`);
         updateSpecialButtonState();
+        saveGameState();
     }
 });
 
@@ -210,6 +251,7 @@ specialButton2.addEventListener('click', () => {
         purchaseCountDisplay2.textContent = purchaseCount2;
         showNotification(`Purchased! Now clicking gives +${incrementAmount}!`);
         updateSpecialButtonState();
+        saveGameState();
     }
 });
 
@@ -238,6 +280,7 @@ specialButton3.addEventListener('click', () => {
         }
 
         updateSpecialButtonState();
+        saveGameState();
     }
 });
 
