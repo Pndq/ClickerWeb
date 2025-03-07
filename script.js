@@ -1,11 +1,14 @@
 let counter = 0;
 let incrementAmount = 1;
+let perSecond = 0;
 let purchaseCount = 0;
 let purchaseCount2 = 0;
+let purchaseCount3 = 0;
 let baseMultiplier = 1.5;
 let baseMultiplier2 = 1.3;
-let currentCost = 100;
-let currentCost2 = 500;
+let currentCost = 25;
+let currentCost2 = 125;
+let currentCost3 = 200;
 let firstUpgradeIncrement = 0;  // Start at 0 since we haven't purchased any upgrades
 let secondUpgradeIncrement = 0; // Start at 0 since we haven't purchased any upgrades
 
@@ -15,23 +18,27 @@ const shopButton = document.querySelector('.rectangle');
 const dropdown = document.querySelector('.dropdown');
 const specialButton = document.getElementById('special-btn');
 const specialButton2 = document.querySelector('.dropdown button:nth-child(2)');
+const specialButton3 = document.getElementById('special-btn-3');
 const notification = document.getElementById('notification');
 const purchaseCountDisplay = specialButton.querySelector('.purchase-count');
 const costDisplay = specialButton.querySelector('.cost');
 const incrementDisplay = specialButton.querySelector('.info span:first-child');
 const testButton = document.querySelector('.test-button');
 
-// Initialize second button structure
-specialButton2.innerHTML = `
-    <div class="info">
-        <span>+5 per click</span>
-        <span class="cost">Cost: 500</span>
-    </div>
-    <span class="purchase-count">0</span>
-`;
 const purchaseCountDisplay2 = specialButton2.querySelector('.purchase-count');
 const costDisplay2 = specialButton2.querySelector('.cost');
 const incrementDisplay2 = specialButton2.querySelector('.info span:first-child');
+
+const purchaseCountDisplay3 = specialButton3.querySelector('.purchase-count')
+const costDisplay3 = specialButton3.querySelector('.cost');
+const incrementDisplay3 = specialButton3.querySelector('.info span:first-child');
+
+setInterval(() => {
+    if (perSecond > 0) {
+        counter += perSecond;
+        countDisplay.textContent = counter;
+    }
+}, 1000);
 
 function calculateCost() {
     return currentCost;
@@ -41,16 +48,27 @@ function calculateCost2() {
     return currentCost2;
 }
 
+function calculateCost3() {
+    return currentCost3;
+}
+
 function updateCost() {
     // Start at 1.5, decrease by 0.1 every other purchase
-    const decreaseAmount = Math.floor((purchaseCount - 1) / 2) * 0.1;
+    const decreaseAmount = Math.floor((purchaseCount) / 2) * 0.1;
     const currentMultiplier = Math.max(1.1, 1.5 - decreaseAmount);  // Don't go below 1.3
     currentCost = Math.floor(currentCost * currentMultiplier);
 }
 
 function updateCost2() {
-    const multiplier = baseMultiplier2 + (Math.floor(purchaseCount2 / 15) * 0.1);
-    currentCost2 = Math.ceil(currentCost2 * multiplier);
+    const decreaseAmount2 = Math.floor((purchaseCount2) / 2) * 0.1;
+    const currentMultiplier2 = Math.max(1.1, 1.5 - decreaseAmount2);
+    currentCost2 = Math.floor(currentCost2 * currentMultiplier2);
+}
+
+function updateCost3() {
+    const decreaseAmount3 = Math.floor((purchaseCount3) / 2) * 0.1;
+    const currentMultiplier3 = Math.max(1.1, 1.5 - decreaseAmount3);
+    currentCost3 = Math.floor(currentCost3 * currentMultiplier3);
 }
 
 function calculateIncrementBonus() {
@@ -67,8 +85,22 @@ function calculateIncrementBonus2() {
     return 5 + (Math.floor((purchaseCount2 - 1) / 5) * 2);
 }
 
+function calculateIncrementBonus3() {
+    // Start at 5, increase by 2 every 5 purchases
+    if (purchaseCount3 === 0) return 1;
+    return 5 + (Math.floor((purchaseCount3 - 1) / 5) * 2);
+}
+
 function getNextIncrementBonus() {
     return Math.floor(purchaseCount / 5) + 1;
+}
+
+function getNextIncrementBonus2() {
+    return (Math.floor(purchaseCount2 / 5) * 2) + 5;
+}
+
+function getNextIncrementBonus3() {
+    return Math.floor(purchaseCount3 / 5) + 1;
 }
 
 function updateButtonText() {
@@ -78,9 +110,14 @@ function updateButtonText() {
     incrementDisplay.textContent = `+${nextBonus} per click`;
 
     const cost2 = calculateCost2();
-    const bonus2 = calculateIncrementBonus2();
+    const bonus2 = getNextIncrementBonus2();
     costDisplay2.textContent = `Cost: ${cost2}`;
     incrementDisplay2.textContent = `+${bonus2} per click`;
+
+    const cost3 = calculateCost3();
+    const bonus3 = getNextIncrementBonus3();
+    costDisplay3.textContent = `Cost: ${cost3}`;
+    incrementDisplay3.textContent = `+${bonus3} per second`;
 }
 
 function showNotification(message) {
@@ -88,12 +125,13 @@ function showNotification(message) {
     notification.classList.add('show');
     setTimeout(() => {
         notification.classList.remove('show');
-    }, 2000);
+    }, 4000);
 }
 
 function updateSpecialButtonState() {
     const cost = calculateCost();
     const cost2 = calculateCost2();
+    const cost3 = calculateCost3();
 
     if (counter < cost) {
         specialButton.disabled = true;
@@ -109,6 +147,14 @@ function updateSpecialButtonState() {
     } else {
         specialButton2.disabled = false;
         specialButton2.title = `Click to trade ${cost2} points for increased increment`;
+    }
+
+    if (counter < cost3) { 
+        specialButton3.disabled = true;
+        specialButton3.title = `Need at least ${cost3} points`;
+    } else {
+        specialButton3.disabled = false;
+        specialButton3.title = `Click to trade ${cost3} points for increased increment`;
     }
 
     updateButtonText();
@@ -154,8 +200,36 @@ specialButton2.addEventListener('click', () => {
     }
 });
 
+let perSecondInterval; // To store the setInterval reference
+
+specialButton3.addEventListener('click', () => {
+    console.log('test')
+    const cost = calculateCost3();
+    if (counter >= cost) {
+        counter -= cost;
+        purchaseCount3 += 1;
+        updateCost3();
+        const bonus = calculateIncrementBonus3();
+        perSecond += bonus;  // Add to the perSecond increment
+        countDisplay.textContent = counter;
+        purchaseCountDisplay3.textContent = purchaseCount3;
+        showNotification(`Purchased! Earning ${perSecond} per second!`);
+
+        // Enable per-second increment if not already active
+        if (!perSecondInterval) {
+            perSecondInterval = setInterval(() => {
+                counter += perSecond;
+                countDisplay.textContent = counter;
+                updateSpecialButtonState();
+            }, 1000);  // Update every second
+        }
+
+        updateSpecialButtonState();
+    }
+});
+
 testButton.addEventListener('click', () => {
-    counter += 100;
+    counter += 10000;
     countDisplay.textContent = counter;
     updateSpecialButtonState();
     showNotification('Added 100 points!');
