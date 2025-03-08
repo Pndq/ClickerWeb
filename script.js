@@ -18,18 +18,25 @@ let secondUpgradeIncrement = 0;
 const countDisplay = document.getElementById('count');
 const incrementButton = document.getElementById('increment-btn');
 const shopButton = document.querySelector('.rectangle');
+
 const dropdown = document.querySelector('.dropdown');
 const dropdown2 = document.querySelector('.dropdown2');
+const dropdown3 = document.querySelector('.dropdown3');
+
 const perClickButton = document.getElementById('perClickButton');
-const perSecondButton = document.getElementById('perSecondButton')
-const upgradeButton1 = document.getElementById('special-btn');
-const upgradeButton2 = document.querySelector('.dropdown button:nth-child(2)');
-const upgradeButton3 = document.getElementById('special-btn-3');
+const perSecondButton = document.getElementById('perSecondButton');
+
+const upgradeButton1 = document.getElementById('upgradeOne');
+const upgradeButton2 = document.getElementById('upgradeTwo');
+const upgradeButton3 = document.getElementById('upgradeThree');
+
 const notification = document.getElementById('notification');
+const menuButton = document.querySelector('.menuButton');
+const resetButton = document.querySelector('.resetButton');
+
 const purchaseCountDisplay = upgradeButton1.querySelector('.purchase-count');
 const costDisplay = upgradeButton1.querySelector('.cost');
 const incrementDisplay = upgradeButton1.querySelector('.info span:first-child');
-const testButton = document.querySelector('.test-button');
 
 const purchaseCountDisplay2 = upgradeButton2.querySelector('.purchase-count');
 const costDisplay2 = upgradeButton2.querySelector('.cost');
@@ -80,7 +87,7 @@ function loadGameState() {
         purchaseCountDisplay3.textContent = upgrade3Count;
 
         updateButtonText();
-        updateupgradeButton1State();
+        updateButtonState();
     }
 }
 
@@ -173,7 +180,7 @@ function showNotification(message) {
     }, 4000);
 }
 
-function updateupgradeButton1State() {
+function updateButtonState() {
     const cost = calculateCost();
     const cost2 = calculateCost2();
     const cost3 = calculateCost3();
@@ -208,7 +215,7 @@ function updateupgradeButton1State() {
 incrementButton.addEventListener('click', () => {
     counter += perClickAmount;
     countDisplay.textContent = counter;
-    updateupgradeButton1State();
+    updateButtonState();
     saveGameState();
 });
 
@@ -227,7 +234,7 @@ upgradeButton1.addEventListener('click', () => {
         countDisplay.textContent = counter;
         purchaseCountDisplay.textContent = upgrade1Count;
         showNotification(`Purchased! Now clicking gives +${perClickAmount}!`);
-        updateupgradeButton1State();
+        updateButtonState();
         saveGameState();
     }
 });
@@ -243,13 +250,12 @@ upgradeButton2.addEventListener('click', () => {
         countDisplay.textContent = counter;
         purchaseCountDisplay2.textContent = upgrade2Count;
         showNotification(`Purchased! Now clicking gives +${perClickAmount}!`);
-        updateupgradeButton1State();
+        updateButtonState();
         saveGameState();
     }
 });
 
 upgradeButton3.addEventListener('click', () => {
-    console.log('test')
     const cost = calculateCost3();
     if (counter >= cost) {
         counter -= cost;
@@ -260,7 +266,7 @@ upgradeButton3.addEventListener('click', () => {
         countDisplay.textContent = counter;
         purchaseCountDisplay3.textContent = upgrade3Count;
         showNotification(`Purchased! Earning ${perSecond} per second!`);
-        updateupgradeButton1State();
+        updateButtonState();
         saveGameState();
     }
 });
@@ -269,13 +275,17 @@ setInterval(() => {
     if (perSecond > 0) {
         counter += perSecond;
         countDisplay.textContent = counter;
-        updateupgradeButton1State();
+        updateButtonState();
         saveGameState();
     }
 }, 1000);
 
-testButton.addEventListener('click', () => {
+menuButton.addEventListener('click', () => {
     dropdown2.classList.toggle('show');
 });
 
-updateupgradeButton1State(); 
+resetButton.addEventListener('click', () => {
+    dropdown3.classList.toggle('show');
+});
+
+updateButtonState(); 
