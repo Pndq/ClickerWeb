@@ -1,6 +1,7 @@
 let counter = 0;
 let perClickAmount = 1;
 let perSecond = 0;
+let rebirthCount = 0;
 
 let upgrade1Count = 0;
 let upgrade2Count = 0;
@@ -12,6 +13,9 @@ let baseMultiplier2 = 1.3;
 let currentCost = 25;
 let currentCost2 = 125;
 let currentCost3 = 200;
+
+let rebirthCost = 10000;
+
 let firstUpgradeIncrement = 0;
 let secondUpgradeIncrement = 0;
 
@@ -42,14 +46,15 @@ const purchaseCountDisplay2 = upgradeButton2.querySelector('.purchase-count');
 const costDisplay2 = upgradeButton2.querySelector('.cost');
 const incrementDisplay2 = upgradeButton2.querySelector('.info span:first-child');
 
-const purchaseCountDisplay3 = upgradeButton3.querySelector('.purchase-count')
+const purchaseCountDisplay3 = upgradeButton3.querySelector('.purchase-count');
 const costDisplay3 = upgradeButton3.querySelector('.cost');
 const incrementDisplay3 = upgradeButton3.querySelector('.info span:first-child');
 
 const perClickDisplay = perClickButton.querySelector('.cost');
-const perClickTitle = perClickButton.querySelector('.info span:first-child')
+const perClickTitle = perClickButton.querySelector('.info span:first-child');
 const perSecondDisplay = perSecondButton.querySelector('.cost');
-const perSecondTitle = perSecondButton.querySelector('.info span:first-child')
+const perSecondTitle = perSecondButton.querySelector('.info span:first-child');
+const rebirthConfirm = document.getElementById('rebirthConfirm');
 
 function saveGameState() {
     const gameState = {
@@ -62,6 +67,7 @@ function saveGameState() {
         currentCost,
         currentCost2,
         currentCost3,
+        rebirthCount,
     };
     localStorage.setItem('pndqClickerGameState', JSON.stringify(gameState));
 }
@@ -73,6 +79,7 @@ function loadGameState() {
         counter = gameState.counter || 0;
         perClickAmount = gameState.perClickAmount || 1;
         perSecond = gameState.perSecond || 0;
+        rebirthCount = gameState.rebirthCount || 0;
         upgrade1Count = gameState.upgrade1Count || 0;
         upgrade2Count = gameState.upgrade2Count || 0;
         upgrade3Count = gameState.upgrade3Count || 0;
@@ -270,6 +277,10 @@ upgradeButton3.addEventListener('click', () => {
         saveGameState();
     }
 });
+
+rebirthConfirm.addEventListener('click', () => {
+    counter += 10;
+})
 
 setInterval(() => {
     if (perSecond > 0) {
