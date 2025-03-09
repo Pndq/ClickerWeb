@@ -163,36 +163,34 @@ function updateCost3() {
 }
 
 function updateRebirthCost() {
-    const decreaseAmount4 = Math.floor((rebirthCount) / 2) * 0.1;
-    const currentMultiplier4 = Math.max(1.1, 1.5 - decreaseAmount4);
-    rebirthCost = Math.floor(rebirthCost * currentMultiplier4);
+    rebirthCost = Math.floor(rebirthCost * ((4 * Math.log(rebirthCount)) + 2));
 }
 
 function calculateIncrementBonus() {
     if (upgrade1Count === 0) return 0;
-    return Math.floor((upgrade1Count - 1) / 5) + 1;
+    return (Math.floor((upgrade1Count - 1) / 5) + 1) * (rebirthCount + 1);
 }
 
 function calculateIncrementBonus2() {
     if (upgrade2Count === 0) return 5;
-    return 5 + (Math.floor((upgrade2Count - 1) / 5) * 2);
+    return (5 + (Math.floor((upgrade2Count - 1) / 5) * 2)) * (rebirthCount + 1);
 }
 
 function calculateIncrementBonus3() {
     if (upgrade3Count === 0) return 1;
-    return 1 + (Math.floor((upgrade3Count - 1) / 5) * 2);
+    return (1 + (Math.floor((upgrade3Count - 1) / 5) * 2)) * (rebirthCount + 1);
 }
 
 function getNextIncrementBonus() {
-    return Math.floor(upgrade1Count / 5) + 1;
+    return (Math.floor(upgrade1Count / 5) + 1) * (rebirthCount + 1);
 }
 
 function getNextIncrementBonus2() {
-    return (Math.floor(upgrade2Count / 5) * 2) + 5;
+    return ((Math.floor(upgrade2Count / 5) * 2) + 5) * (rebirthCount + 1);
 }
 
 function getNextIncrementBonus3() {
-    return Math.floor(upgrade3Count / 5) + 1;
+    return (Math.floor(upgrade3Count / 5) + 1) * (rebirthCount + 1);
 }
 
 function updateButtonText() {
