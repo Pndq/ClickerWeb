@@ -37,6 +37,9 @@ const upgradeButton3 = document.getElementById('upgradeThree');
 const notification = document.getElementById('notification');
 const menuButton = document.querySelector('.menuButton');
 const resetButton = document.querySelector('.resetButton');
+const rebirthConfirm = document.getElementById('rebirthConfirm');
+const rebirthCostDisplay = rebirthConfirm.querySelector('.cost');
+const rebirthPurchaseCount = rebirthConfirm.querySelector('.purchase-count');
 
 const purchaseCountDisplay = upgradeButton1.querySelector('.purchase-count');
 const costDisplay = upgradeButton1.querySelector('.cost');
@@ -54,7 +57,6 @@ const perClickDisplay = perClickButton.querySelector('.cost');
 const perClickTitle = perClickButton.querySelector('.info span:first-child');
 const perSecondDisplay = perSecondButton.querySelector('.cost');
 const perSecondTitle = perSecondButton.querySelector('.info span:first-child');
-const rebirthConfirm = document.getElementById('rebirthConfirm');
 
 function saveGameState() {
     const gameState = {
@@ -100,6 +102,32 @@ function loadGameState() {
 
 window.addEventListener('load', loadGameState);
 
+function rebirthReset() {
+    localStorage.removeItem('pndqClickerGameState');
+
+    counter = 0;
+    perClickAmount = 1;
+    perSecond = 0;
+
+    upgrade1Count = 0;
+    upgrade2Count = 0;
+    upgrade3Count = 0;
+
+    currentCost = 25;
+    currentCost2 = 125;
+    currentCost3 = 200;
+
+    countDisplay.textContent = counter;
+
+    purchaseCountDisplay.textContent = upgrade1Count;
+    purchaseCountDisplay2.textContent = upgrade2Count;
+    purchaseCountDisplay3.textContent = upgrade3Count;
+
+    updateButtonText();
+    updateButtonState();
+    saveGameState();
+}
+
 function calculateCost() {
     return currentCost;
 }
@@ -110,6 +138,10 @@ function calculateCost2() {
 
 function calculateCost3() {
     return currentCost3;
+}
+
+function calculateRebirthCost() {
+    return rebirthCost;
 }
 
 function updateCost() {
@@ -128,6 +160,12 @@ function updateCost3() {
     const decreaseAmount3 = Math.floor((upgrade3Count) / 2) * 0.1;
     const currentMultiplier3 = Math.max(1.1, 1.5 - decreaseAmount3);
     currentCost3 = Math.floor(currentCost3 * currentMultiplier3);
+}
+
+function updateRebirthCost() {
+    const decreaseAmount4 = Math.floor((rebirthCount) / 2) * 0.1;
+    const currentMultiplier4 = Math.max(1.1, 1.5 - decreaseAmount4);
+    rebirthCost = Math.floor(rebirthCost * currentMultiplier4);
 }
 
 function calculateIncrementBonus() {
@@ -173,6 +211,9 @@ function updateButtonText() {
     costDisplay3.textContent = `Cost: ${cost3}`;
     incrementDisplay3.textContent = `+${bonus3} per second`;
 
+    const rebirthCost = calculateRebirthCost();
+    rebirthCostDisplay.textContent = `Cost: ${rebirthCost}`;
+
     perClickDisplay.textContent = `${perClickAmount}`;
     perClickTitle.textContent = 'Amount per click: ';
     perSecondDisplay.textContent = `${perSecond}`;
@@ -191,6 +232,7 @@ function updateButtonState() {
     const cost = calculateCost();
     const cost2 = calculateCost2();
     const cost3 = calculateCost3();
+    const cost4 = calculateRebirthCost();
 
     if (counter < cost) {
         upgradeButton1.disabled = true;
@@ -216,6 +258,13 @@ function updateButtonState() {
         upgradeButton3.title = `Click to trade ${cost3} points for increased increment`;
     }
 
+    if (counter < cost4) { 
+        rebirthConfirm.disabled = true;
+        rebirthConfirm.title = `Need at least ${cost4} points`;
+    } else {
+        rebirthConfirm.disabled = false;
+        rebirthConfirm.title = `Click to trade ${cost4} points for increased increment`;
+    }
     updateButtonText();
 }
 
@@ -279,7 +328,18 @@ upgradeButton3.addEventListener('click', () => {
 });
 
 rebirthConfirm.addEventListener('click', () => {
-    counter += 10;
+    const cost = calculateRebirthCost();
+    if (counter >= cost) {
+        counter -= cost;
+        rebirthCount += 1;
+        updateRebirthCost();
+        countDisplay.textContent = counter;
+        rebirthPurchaseCount.textContent = rebirthCount;
+        showNotification('Rebirth successful! Resetting...');
+        updateButtonState();
+        saveGameState();
+        rebirthReset();
+    }
 })
 
 setInterval(() => {

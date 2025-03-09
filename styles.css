@@ -277,6 +277,11 @@ body {
     color: #999;
 }
 
+.dropdown3 button:disabled .warning {
+    font-size: 14px;
+    color: #999;
+}
+
 .notification {
     position: fixed;
     top: -100px;
